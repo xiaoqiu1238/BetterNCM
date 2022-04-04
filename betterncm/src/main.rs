@@ -1,13 +1,10 @@
 #![feature(path_try_exists)]
 #![feature(try_blocks)]
 
-extern crate minwin;
 extern crate msgbox;
 
 use std::{env, process::Command};
 
-use minwin::named::CreateNamedError;
-use minwin::sync::Mutex;
 
 use hudsucker::{
     async_trait::async_trait,
@@ -214,8 +211,6 @@ async fn main() {
 
     write_assets();
 
-    match Mutex::create_named("BetterNCM") {
-        Ok(_) => {
             tracing_subscriber::fmt::init();
             let private_key_bytes: &[u8] = include_bytes!("../ca/key.pem");
             let ca_cert_bytes: &[u8] = include_bytes!("../ca/cert.pem");
@@ -235,12 +230,5 @@ async fn main() {
             if let Err(e) = proxy.start(shutdown_signal()).await {
                 error!("{}", e);
             }
-        }
-        Err(CreateNamedError::AlreadyExists(_)) => {
-            println!("Process already running!");
-        }
-        Err(error) => {
-            println!("An error occurred: {}", error);
-        }
-    }
+      
 }
