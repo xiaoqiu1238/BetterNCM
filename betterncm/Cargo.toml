@@ -10,7 +10,5 @@ tokio = { version = "1.17.0", features = ["full"] }
 tracing = "0.1.32"
 hudsucker = { version = "*", features = ["full"] }
 tracing-subscriber="*"
-minwin = { git ="https://github.com/Jascha-N/minwin-rs" }
 msgbox = "0.7.0"
-is_elevated = "0.1.2"
 edit= "*"
