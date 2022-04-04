@@ -1,4 +1,3 @@
-#![windows_subsystem = "windows"]
 #![feature(path_try_exists)]
 #![feature(try_blocks)]
 
@@ -146,60 +145,10 @@ impl MessageHandler for WsLogHandler {
 }
 
 fn elevate() {
-    use is_elevated::is_elevated;
-    if !is_elevated() {
-        msgbox::create("警告", "初次运行，请右键管理员运行~", IconType::Error).unwrap();
-        std::process::exit(0);
-    }
+
 }
 
 fn write_assets() {
-    // if !fs::try_exists("cloudmusic.dll").unwrap() {
-    //     msgbox::create("用法", "1.关闭网易云音乐，将本程序拷贝到网易云音乐安装目录内，替换cloudmusic.exe\n2.在 网易云音乐-工具 上点击自定义代理，输入\n\t服务器：localhost\t端口：3000\n3.点击确定", IconType::Error).unwrap();
-    //     std::process::exit(0);
-    // }
-
-    // match fs::try_exists("cloudmusicn.exe"){
-    //     Ok(true) => {
-    //         println!("cloudmusicn.exe exists");
-    //     },
-    //     Ok(false) => {
-    //         println!("cloudmusicn.exe not exists");
-    //         elevate();
-    //         fs::write("cloudmusicn.exe", include_bytes!("../cloudmusicn.exe")).expect("write cloudmusicn.exe failed");
-    //     },
-    //     Err(e) => {
-    //         println!("cloudmusicn.exe not exists");
-    //         println!("{:?}", e);
-    //     }
-    // }
-
-    if !fs::try_exists("cloudmusicn.exe").unwrap() {
-        if !fs::try_exists("cloudmusic.dll").unwrap() {
-            msgbox::create("用法", "1.关闭网易云音乐，将本程序拷贝到网易云音乐安装目录内，右键管理员运行\n2.在 网易云音乐-工具 上点击自定义代理，输入\n\t服务器：localhost\t端口：3000\n3.点击确定", IconType::Error).unwrap();
-            std::process::exit(0);
-        } else {
-            elevate();
-            let result: Result<(), std::io::Error> = try {
-                fs::rename("cloudmusic.exe", "cloudmusicn.exe")?;
-                fs::copy("betterncm.exe", "cloudmusic.exe")?;
-                use std::process::Command;
-                Command::new("cloudmusic.exe").spawn()?;
-                return ();
-            };
-            match result {
-                Ok(_) => {
-                    std::process::exit(0);
-                }
-                Err(_) => {
-                    msgbox::create("安装失败", "请检查网易云音乐是否已退出", IconType::Error)
-                        .unwrap();
-                    std::process::exit(0);
-                }
-            }
-        }
-    }
-
     if !fs::try_exists(config_path()).unwrap() {
         elevate();
         fs::create_dir(config_path()).expect("create addons failed");
@@ -264,12 +213,6 @@ async fn main() {
     use std::process::Command;
 
     write_assets();
-
-    if true {
-        Command::new("cloudmusicn.exe")
-            .spawn()
-            .expect("Failed to launch NCM");
-    }
 
     match Mutex::create_named("BetterNCM") {
         Ok(_) => {
